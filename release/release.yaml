@@ -4,8 +4,10 @@ kind: Application
 metadata:
   name: metrics-server
   namespace: argocd
+
 spec:
   project: default
+
   sources:
     - chart: metrics-server
       repoURL: https://kubernetes-sigs.github.io/metrics-server
@@ -17,9 +19,11 @@ spec:
     - repoURL: https://github.com/IanHewlett/nano-platform-service-metrics-server.git
       targetRevision: main
       ref: values
+
   destination:
     server: "https://kubernetes.default.svc"
     namespace: kube-system
+
   syncPolicy:
     automated:
       selfHeal: true

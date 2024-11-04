@@ -1,3 +1,15 @@
+replicas: 3
+
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxSurge: 1
+    maxUnavailable: 1
+
+podDisruptionBudget:
+  enabled: true
+  maxUnavailable: 1
+
 resources:
   requests:
     cpu: 10m
@@ -5,10 +17,44 @@ resources:
   limits:
     cpu: 100m
     memory: 200Mi
+
 nodeSelector:
   nodegroup: "management-nodes"
+
 tolerations:
   - key: "dedicated"
     operator: "Equal"
     value: "management"
     effect: "NoSchedule"
+
+affinity:
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchExpressions:
+            - key: app.kubernetes.io/name
+              operator: In
+              values:
+                - metrics-server
+        topologyKey: kubernetes.io/hostname
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: failure-domain.beta.kubernetes.io/zone
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: metrics-server
+
+topologySpreadConstraints:
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: metrics-server
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        app.kubernetes.io/name: metrics-server
