@@ -18,8 +18,8 @@ spec:
         releaseName: metrics-server
         valueFiles:
         - $values/release/values.yaml
+
     - repoURL: https://github.com/IanHewlett/nano-platform-service-metrics-server.git
-      targetRevision: main
       ref: values
 
   destination:
