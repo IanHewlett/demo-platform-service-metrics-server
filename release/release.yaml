@@ -19,7 +19,7 @@ spec:
         valueFiles:
         - $values/release/values.yaml
 
-    - repoURL: https://github.com/IanHewlett/nano-platform-service-metrics-server.git
+    - repoURL: https://github.com/IanHewlett/demo-platform-service-metrics-server.git
       ref: values
 
   destination:
